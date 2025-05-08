@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+{% extends "base.html" %}
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock Trading Bot</title>
+   
+</head>
+<body>
+    <header>
+        <h1>Stock Trading Bot</h1>
+    </header>
+
+    <div class="container">
+        <form method="POST" action="/">
+            <input type="text" name="ticker" placeholder="Enter Stock Ticker" required>
+            <button type="submit">Analyze</button>
+        </form>
+
+        {% if ticker %}
+        <div class="stock-info">
+            <h2>{{ ticker }} Information</h2>
+            <p><strong>Close:</strong> ${{ latest_data['Close'] }}</p>
+            <p><strong>RSI:</strong> {{ latest_data['RSI'] }}</p>
+            <p><strong>SMA-10:</strong> {{ latest_data['SMA_10'] }}</p>
+            <p><strong>SMA-50:</strong> {{ latest_data['SMA_50'] }}</p>
+            <p><strong>Recommendation:</strong> {{ recommendation }}</p>
+        </div>
+
+        <div class="charts">
+            <div class="chart">
+                <h3>Stock Price Chart</h3>
+                <img src="data:image/png;base64,{{ plot_img }}" alt="Stock Chart">
+            </div>
+
+            <div class="chart">
+                <h3>Backtest Results</h3>
+                <img src="data:image/png;base64,{{ backtest_plot }}" alt="Backtest Chart">
+            </div>
+        </div>
+
+        <div class="portfolio">
+            <h3>Portfolio</h3>
+            <p><strong>Initial Balance:</strong> ${{ backtest_results['final_value'] }}</p>
+            <p><strong>Total Profit:</strong> ${{ backtest_results['profit'] }}</p>
+            <p><strong>Buy/Sell Actions:</strong></p>
+            <ul>
+                {% for action, day in backtest_results['buy_sell_signals'] %}
+                    <li>{{ action }} on day {{ day }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+    setInterval(function() {
+        $.ajax({
+            url: "/",
+            method: "POST",
+            data: {
+                ticker: "{{ ticker }}",
+            },
+            success: function(data) {
+                // Update the stock data section without reloading the page
+                $(".stock-info").html(data.stock_info);
+                $(".charts").html(data.charts);
+                $(".portfolio").html(data.portfolio);
+            }
+        });
+    }, 60000);  // Fetch new data every minute
+</script>
+

@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="container">
+        <h1 class="text-center">Welcome to Stock Bot</h1>
+        <p class="text-center">Your AI-powered trading assistant</p>
+
+        <!-- Portfolio Management Section -->
+        <div class="feature-box">
+            <h3>Manage Your Portfolio</h3>
+            <p>Track your stock investments, view performance, and make adjustments.</p>
+            <a href="/portfolio" class="btn btn-primary">Go to Portfolio</a>
+        </div>
+
+        <!-- Stock Suggestions Section -->
+        <div class="feature-box">
+            <h3>Get Stock Suggestions</h3>
+            <p>AI-powered recommendations for stocks to buy or sell based on technical indicators.</p>
+            <a href="/stock-suggestions" class="btn btn-primary">Get Stock Suggestions</a>
+        </div>
+
+        <!-- Backtesting Section -->
+        <div class="feature-box">
+            <h3>Backtest Your Strategy</h3>
+            <p>Test your investment strategies with historical data and analyze their performance.</p>
+            <a href="/backtesting" class="btn btn-primary">Start Backtesting</a>
+        </div>
+    </div>
+{% endblock %}

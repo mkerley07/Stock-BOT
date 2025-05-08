@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Stock Suggestions</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 text-gray-900 font-sans">
+    <div class="max-w-4xl mx-auto p-6">
+        <h1 class="text-3xl font-bold mb-6 text-center">📈 AI Stock Suggestions</h1>
+
+        <form method="POST" class="bg-white p-6 rounded-lg shadow-md mb-8">
+            <div class="mb-4">
+                <label for="ticker" class="block text-sm font-medium text-gray-700">Enter a Ticker (e.g., AAPL)</label>
+                <input type="text" name="ticker" id="ticker" required class="w-full mt-1 p-2 border border-gray-300 rounded-md">
+            </div>
+            <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Get Suggestion</button>
+        </form>
+
+        {% if analysis %}
+        <div class="bg-white p-6 rounded-lg shadow-md">
+            <h2 class="text-xl font-semibold mb-2">Recommendation: {{ analysis.Recommendation }}</h2>
+            <p class="mb-4 text-gray-700">{{ analysis.Explanation }}</p>
+
+            <ul class="mb-4 text-sm">
+                <li><strong>Close Price:</strong> ${{ analysis.Close }}</li>
+                <li><strong>RSI:</strong> {{ analysis.RSI }}</li>
+                <li><strong>MACD:</strong> {{ analysis.MACD }}</li>
+                <li><strong>Signal Line:</strong> {{ analysis.Signal_Line }}</li>
+                <li><strong>SMA 10:</strong> {{ analysis.SMA_10 }}</li>
+                <li><strong>SMA 50:</strong> {{ analysis.SMA_50 }}</li>
+            </ul>
+
+            {% if chart_img %}
+            <img src="data:image/png;base64,{{ chart_img }}" class="w-full rounded-lg border mt-4">
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>
+
+
+{% endblock %}

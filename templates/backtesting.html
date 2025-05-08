@@ -1,0 +1,66 @@
+<!-- backtesting.html -->
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h1 class="text-center">Backtesting Strategies</h1>
+    <form id="backtest-form" method="POST" class="mb-4">
+        <div class="form-group">
+            <label for="tickers">Enter Tickers (comma-separated):</label>
+            <input type="text" id="tickers" name="tickers" class="form-control" placeholder="AAPL, MSFT, TSLA" value="{{ request.form['tickers'] if request.form['tickers'] else '' }}" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="strategy">Select Strategy:</label>
+            <select id="strategy" name="strategy" class="form-control" onchange="updateStrategyFields()">
+                <option value="RSI" {% if request.form['strategy'] == 'RSI' %}selected{% endif %}>RSI</option>
+                <option value="MACD" {% if request.form['strategy'] == 'MACD' %}selected{% endif %}>MACD</option>
+                <option value="SMA Crossover" {% if request.form['strategy'] == 'SMA Crossover' %}selected{% endif %}>SMA Crossover</option>
+            </select>
+        </div>
+        
+        <div id="rsi-fields" style="display: none;">
+            <div class="form-group">
+                <label for="buy_threshold">Buy Threshold (RSI):</label>
+                <input type="number" id="buy_threshold" name="buy_threshold" class="form-control" value="{{ request.form['buy_threshold'] if request.form['buy_threshold'] else '40' }}" required>
+            </div>
+            <div class="form-group">
+                <label for="sell_threshold">Sell Threshold (RSI):</label>
+                <input type="number" id="sell_threshold" name="sell_threshold" class="form-control" value="{{ request.form['sell_threshold'] if request.form['sell_threshold'] else '60' }}" required>
+            </div>
+        </div>
+        
+        <div id="sma-fields" style="display: none;">
+            <div class="form-group">
+                <label for="sma_short">Short Window (SMA):</label>
+                <input type="number" id="sma_short" name="sma_short" class="form-control" value="{{ request.form['sma_short'] if request.form['sma_short'] else '10' }}">
+            </div>
+            <div class="form-group">
+                <label for="sma_long">Long Window (SMA):</label>
+                <input type="number" id="sma_long" name="sma_long" class="form-control" value="{{ request.form['sma_long'] if request.form['sma_long'] else '50' }}">
+            </div>
+        </div>
+        
+        <button type="submit" class="btn btn-primary">Run Backtest</button>
+    </form>
+    
+    {% for result in results %}
+    <h3>{{ result.ticker }}</h3>
+    <p>Final Portfolio Value: ${{ result.final_value }}</p>
+    <p>Total Profit: ${{ result.profit }}</p>
+    <img src="data:image/png;base64,{{ result.plot_img }}" alt="Backtesting Graph">
+    {% endfor %}
+</div>
+
+<script>
+    function updateStrategyFields() {
+        let strategy = document.getElementById("strategy").value;
+        document.getElementById("rsi-fields").style.display = strategy === "RSI" ? "block" : "none";
+        document.getElementById("sma-fields").style.display = strategy === "SMA Crossover" ? "block" : "none";
+    }
+    
+    document.addEventListener("DOMContentLoaded", function() {
+        updateStrategyFields();
+    });
+</script>
+{% endblock %}

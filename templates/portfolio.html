@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block content %}
+<body class="bg-gray-100 text-gray-900 font-sans">
+    <div class="max-w-4xl mx-auto p-6">
+        <h1 class="text-3xl font-bold mb-6 text-center">📊 My Portfolio</h1>
+
+        <table class="min-w-full bg-white rounded-lg shadow-md">
+            <thead>
+                <tr>
+                    <th class="py-2 px-4 border-b">Ticker</th>
+                    <th class="py-2 px-4 border-b">Shares</th>
+                    <th class="py-2 px-4 border-b">Avg Price</th>
+                    <th class="py-2 px-4 border-b">Latest Price</th>
+                    <th class="py-2 px-4 border-b">Value</th>
+                    <th class="py-2 px-4 border-b">P/L</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for stock in portfolio %}
+                <tr>
+                    <td class="py-2 px-4 border-b">{{ stock.ticker }}</td>
+                    <td class="py-2 px-4 border-b">{{ stock.shares }}</td>
+                    <td class="py-2 px-4 border-b">${{ stock.avg_price }}</td>
+                    <td class="py-2 px-4 border-b">${{ stock.latest_price }}</td>
+                    <td class="py-2 px-4 border-b">${{ stock.current_value }}</td>
+                    <td class="py-2 px-4 border-b {% if stock.profit_loss >= 0 %}text-green-600{% else %}text-red-600{% endif %}">${{ stock.profit_loss }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <div class="mt-6 text-xl">
+            <p><strong>Total Value:</strong> ${{ total_value }}</p>
+            <p><strong>Total Profit/Loss:</strong> <span class="{% if total_profit_loss >= 0 %}text-green-600{% else %}text-red-600{% endif %}">${{ total_profit_loss }}</span></p>
+        </div>
+    </div>
+</body>
+
+{% endblock %}
